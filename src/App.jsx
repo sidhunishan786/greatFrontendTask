@@ -37,15 +37,23 @@ function JobsCard({id}){
 function App() {
 
   let [jobsList,SetjobsList]=useState([]);
+  let [currJobs,Setcurrjobs]=useState(6);
+
+  let [filteredList,SetfilteredList]= useState(jobsList?.slice(0,currJobs));
 
   async function pullJobs(){
     let temp=await fetch(" https://hacker-news.firebaseio.com/v0/jobstories.json");
     temp=await temp.json();
-    // temp=temp?.data;
+  
   
     SetjobsList(temp);
+    SetfilteredList(jobsList.slice(0,currJobs));
+    Setcurrjobs(currJobs+6);
+    
     console.log(temp);
   }
+  
+  
 
   useEffect(() => {
 
@@ -73,9 +81,12 @@ function App() {
       Hacker News Jobs Board
     </div>
     <div style={divstyle}>
-      {jobsList.map((curr,index)=><JobsCard key={index} id={curr}></JobsCard>)}
+      {filteredList.map((curr,index)=><JobsCard key={index} id={curr}></JobsCard>)}
 
     </div>
+    <button onClick={()=>{SetfilteredList(jobsList?.slice(0,currJobs));Setcurrjobs(currJobs+6)}}>
+      load more jobs......
+    </button>
        
     </>
   )
